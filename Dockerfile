@@ -3,7 +3,6 @@ FROM python:3.12-slim
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
-# Instala dependências de sistema necessárias para WeasyPrint e PostgreSQL
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     python3-dev \
@@ -25,8 +24,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-ENV PYTHONPATH=/app/src
+WORKDIR /app/src
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
+# Executa migrações, cria o superusuário automaticamente e sobe o servidor
+CMD ["sh", "-c", "python manage.py migrate && python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@email.com', 'SenhaSegura123!')\" && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
