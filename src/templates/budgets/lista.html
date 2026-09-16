@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Meus Orçamentos</h2>
+    <a href="{% url 'budgets:criar' %}" class="btn btn-primary">+ Criar Orçamento</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Status</th>
+                    <th>Materiais</th>
+                    <th>Mão de Obra</th>
+                    <th>Total Final</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in orcamentos %}
+                <tr>
+                    <td><strong>{{ o.titulo }}</strong></td>
+                    <td><span class="badge bg-secondary">{{ o.get_status_display }}</span></td>
+                    <td>R$ {{ o.total_materiais }}</td>
+                    <td>R$ {{ o.valor_mao_obra }}</td>
+                    <td class="text-success fw-bold">R$ {{ o.valor_final }}</td>
+                    <td>
+                        <a href="{% url 'budgets:detalhe' o.pk %}" class="btn btn-sm btn-outline-primary">Ver Detalhes</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Nenhum orçamento cadastrado ainda.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

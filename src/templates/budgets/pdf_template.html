@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Orçamento - {{ orcamento.titulo }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .header {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #0056b3;
+            font-size: 24px;
+        }
+        .info-grid {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .info-grid td {
+            vertical-align: top;
+        }
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table.items th {
+            background-color: #f2f2f2;
+            border-bottom: 2px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table.items td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+        }
+        .totals {
+            width: 40%;
+            float: right;
+            margin-top: 10px;
+        }
+        .totals table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .totals td {
+            padding: 5px 0;
+        }
+        .grand-total {
+            font-size: 16px;
+            font-weight: bold;
+            color: #28a745;
+            border-top: 2px solid #333;
+            padding-top: 5px;
+        }
+        .clear {
+            clear: both;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 10px;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ORÇAMENTO #{{ orcamento.pk }}</h1>
+        <p><strong>Projeto:</strong> {{ orcamento.titulo }}</p>
+    </div>
+
+    <table class="info-grid">
+        <tr>
+            <td>
+                <strong>Data de Emissão:</strong> {{ orcamento.criado_em|date:"d/m/Y" }}<br>
+                <strong>Status:</strong> {{ orcamento.get_status_display }}
+            </td>
+        </tr>
+    </table>
+
+    {% if orcamento.descricao %}
+    <p><strong>Descrição do Serviço:</strong><br>{{ orcamento.descricao }}</p>
+    {% endif %}
+
+    <h3>Materiais e Insumos</h3>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>Item / Descrição</th>
+                <th style="width: 15%; text-align: center;">Qtd</th>
+                <th style="width: 20%; text-align: right;">Preço Unit.</th>
+                <th style="width: 20%; text-align: right;">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in orcamento.materiais.all %}
+            <tr>
+                <td>{{ item.descricao }}</td>
+                <td style="text-align: center;">{{ item.quantidade }}</td>
+                <td style="text-align: right;">R$ {{ item.preco_unitario }}</td>
+                <td style="text-align: right;">R$ {{ item.subtotal }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center;">Nenhum material listado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <table>
+            <tr>
+                <td>Subtotal Materiais:</td>
+                <td style="text-align: right;">R$ {{ orcamento.total_materiais }}</td>
+            </tr>
+            <tr>
+                <td>Mão de Obra:</td>
+                <td style="text-align: right;">R$ {{ orcamento.valor_mao_obra }}</td>
+            </tr>
+            <tr class="grand-total">
+                <td>Valor Total:</td>
+                <td style="text-align: right;">R$ {{ orcamento.valor_final }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="clear"></div>
+
+    <div class="footer">
+        <p>OrçaFácil - Gerador de Orçamentos Profissionais</p>
+    </div>
+
+</body>
+</html>
