@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     shared-mime-info \
     libpq-dev \
+    findutils \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -26,4 +27,5 @@ COPY . /app/
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "MANAGE_PATH=$(find /app -name manage.py | head -n 1) && MANAGE_DIR=$(dirname \"$MANAGE_PATH\") && cd \"$MANAGE_DIR\" && export PYTHONPATH=\"$MANAGE_DIR:$PYTHONPATH\" && python manage.py migrate && python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@email.com', 'SenhaSegura123!')\" && WSGI_MODULE=$(python -c \"import os; print(next(os.path.basename(r) for r, d, f in os.walk('.') if 'wsgi.py' in f))\") && gunicorn ${WSGI_MODULE}.wsgi:application --bind 0.0.0.0:8000"]
+# Exibe a localização do manage.py, wsgi.py e a estrutura completa de pastas
+CMD ["sh", "-c", "echo '=== LOCALIZACAO DO MANAGE.PY ===' && find /app -name manage.py && echo '=== LOCALIZACAO DO WSGI.PY ===' && find /app -name wsgi.py && echo '=== ESTRUTURA DE PASTAS ===' && find /app -maxdepth 4 -not -path '*/.*'"]
