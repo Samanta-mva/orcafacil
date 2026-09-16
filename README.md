@@ -27,5 +27,38 @@ A documentação completa de requisitos, arquitetura e banco de dados está disp
 
 1. **Clone o repositório:**
    ```bash
-   git clone [https://github.com/SEU_USUARIO/OrcaFacil.git](https://github.com/SEU_USUARIO/OrcaFacil.git)
+   git clone [https://github.com/Samanta-mva/OrcaFacil.git](https://github.com/Samanta-mva/OrcaFacil.git)
    cd OrcaFacil
+   ```
+
+2. **Crie e ative o ambiente virtual:**
+    ```bash
+    python -m venv .venv
+    # Linux/macOS:
+    source .venv/bin/activate
+    # Windows:
+    .venv\Scripts\activate
+    ```
+
+3. **Instale as dependências:**
+    ```bash
+    pip install django weasyprint
+    ```
+
+4. **Execute as migrações do banco de dados:**
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+
+5. **Inicie o servidor de desenvolvimento:**
+    ```bash
+    python manage.py runserver
+    ```
+Acesse a aplicação no seu navegador: http://127.0.0.1:8000/
+
+6. **Para salvar e subir a atualização no GitHub:**
+    ```bash
+    git add README.md
+    git commit -m "docs: atualiza README mantendo estrutura da documentacao"
+    git push origin main
+    ```
