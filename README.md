@@ -27,7 +27,7 @@ A documentação completa de requisitos, arquitetura e banco de dados está disp
 
 1. **Clone o repositório:**
    ```bash
-   git clone [https://github.com/Samanta-mva/OrcaFacil.git](https://github.com/Samanta-mva/OrcaFacil.git)
+   git clone https://github.com/Samanta-mva/OrcaFacil.git
    cd OrcaFacil
    ```
 
