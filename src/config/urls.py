@@ -14,10 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('budgets.urls')), # Redireciona a raiz para orçamentos
+    path('', include('core.urls')),  # Inclui as rotas do core (dashboard)
+    path('customers/', include('customers.urls')),
+    path('budgets/', include('budgets.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    
+    # Redireciona a raiz '/' diretamente para o dashboard se desejar
+    path('', lambda request: redirect('dashboard'), name='home'),
 ]
