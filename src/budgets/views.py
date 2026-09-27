@@ -4,6 +4,9 @@ from django.template.loader import render_to_string  # <-- Adicione esta linha!
 from weasyprint import HTML
 from .models import Orcamento
 from .forms import OrcamentoForm, ItemMaterialFormSet
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from .models import Budget
 
 def lista_orcamentos(request):
     orcamentos = Orcamento.objects.all()
@@ -41,3 +44,12 @@ def gerar_pdf_orcamento(request, pk):
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="Orcamento_{orcamento.pk}_{orcamento.titulo}.pdf"'
     return response
+
+
+class BudgetListView(LoginRequiredMixin, ListView):
+    model = Budget
+    template_name = 'budgets/lista.html'
+
+    def get_queryset(self):
+        # RN003: Retorna APENAS os orçamentos do marceneiro logado
+        return Budget.objects.filter(user=self.request.user)

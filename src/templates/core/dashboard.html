@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | OrçaFácil{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">Painel Principal</h2>
+    <a href="{% url 'budget-create' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Novo Orçamento</a>
+</div>
+
+<!-- Cards de Indicadores -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm border-start border-4 border-warning h-100">
+            <div class="card-body">
+                <span class="text-muted small text-uppercase fw-bold">Rascunhos</span>
+                <h3 class="fw-bold my-1 text-warning">{{ draft_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm border-start border-4 border-info h-100">
+            <div class="card-body">
+                <span class="text-muted small text-uppercase fw-bold">Enviados</span>
+                <h3 class="fw-bold my-1 text-info">{{ sent_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm border-start border-4 border-success h-100">
+            <div class="card-body">
+                <span class="text-muted small text-uppercase fw-bold">Aprovados</span>
+                <h3 class="fw-bold my-1 text-success">{{ approved_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm border-start border-4 border-primary h-100">
+            <div class="card-body">
+                <span class="text-muted small text-uppercase fw-bold">Total Aprovado</span>
+                <h3 class="fw-bold my-1 text-primary">R$ {{ total_revenue|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabela de Orçamentos Recentes -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h5 class="fw-bold mb-0">Últimos Orçamentos</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Título</th>
+                        <th>Cliente</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for budget in recent_budgets %}
+                    <tr>
+                        <td class="fw-semibold">{{ budget.title }}</td>
+                        <td>{{ budget.customer.name|default:"Sem cliente" }}</td>
+                        <td>R$ {{ budget.total_price|floatformat:2 }}</td>
+                        <td>
+                            {% if budget.status == 'draft' %}
+                                <span class="badge bg-warning text-dark">Rascunho</span>
+                            {% elif budget.status == 'sent' %}
+                                <span class="badge bg-info text-dark">Enviado</span>
+                            {% elif budget.status == 'approved' %}
+                                <span class="badge bg-success">Aprovado</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'budget-detail' budget.pk %}" class="btn btn-sm btn-outline-secondary">Ver</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">Nenhum orçamento cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

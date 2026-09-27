@@ -1,7 +1,6 @@
 from django.db import models
-
-# Create your models here.
 from decimal import Decimal
+from customers.models import Customer
 
 class Orcamento(models.Model):
     STATUS_CHOICES = [
@@ -52,3 +51,22 @@ class Orcamento(models.Model):
     def valor_final(self) -> Decimal:
         """Retorna o valor total de venda do orçamento."""
         return self.custo_total_base + self.valor_lucro
+
+
+class Budget(models.Model):
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='budgets',
+        verbose_name="Cliente"
+    )
+    
+
+user = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='%(class)ss',  # Gera 'customers' e 'budgets'
+    verbose_name="Marceneiro/Usuário"
+)
