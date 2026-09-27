@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
-from . import views
+from accounts.views import register
 
 
 urlpatterns = [
@@ -28,6 +28,9 @@ urlpatterns = [
     path('budgets/', include('budgets.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('cadastrar/', views.cadastrar, name='cadastrar'),
+    path('accounts/register/', register, name='register'),
+    path('accounts/', include('django.contrib.auth.urls')),  # Login/Logout nativos
+    path('', include('core.urls')),                          # Home / Dashboard
     
     # Redireciona a raiz '/' diretamente para o dashboard se desejar
     path('', lambda request: redirect('dashboard'), name='home'),

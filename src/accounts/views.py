@@ -1,4 +1,3 @@
-# src/accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
@@ -9,10 +8,9 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Faz o login automático do usuário após o cadastro
             login(request, user)
             messages.success(request, "Conta criada com sucesso!")
-            return redirect('/')  # Redireciona para a página principal ou dashboard
+            return redirect('/')
     else:
         form = UserCreationForm()
         
