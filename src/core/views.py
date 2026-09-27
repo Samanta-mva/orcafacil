@@ -9,8 +9,11 @@ from django.contrib import messages
 
 @login_required
 def dashboard_view(request):
-    # Busca os orçamentos através do relacionamento do cliente com o usuário logado
-    user_budgets = Budget.objects.filter(customer=request.user)
+    # 1. Busca todos os clientes cadastrados pelo usuário logado
+    user_customers = Customer.objects.filter(user=request.user)
+    
+    # 2. Busca os orçamentos associados aos clientes do usuário
+    user_budgets = Budget.objects.filter(customer__in=user_customers)
     
     # Contadores
     total_budgets = user_budgets.count()
@@ -21,8 +24,8 @@ def dashboard_view(request):
     # Soma total aprovada
     total_revenue = user_budgets.filter(status='approved').aggregate(Sum('total_price'))['total_price__sum'] or 0
     
-    # Total de clientes
-    total_customers = Customer.objects.filter(user=request.user).count()
+    # Total de clientes do usuário
+    total_customers = user_customers.count()
     
     # Últimos 5 orçamentos
     recent_budgets = user_budgets.order_by('-created_at')[:5]
@@ -37,7 +40,7 @@ def dashboard_view(request):
         'recent_budgets': recent_budgets,
     }
     return render(request, 'core/dashboard.html', context)
-
+    
 
 def cadastrar(request):
     if request.method == 'POST':
