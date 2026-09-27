@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+from .views import register
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -152,3 +153,7 @@ LOGIN_REDIRECT_URL = '/'  # Ou a rota inicial do seu app, ex: 'core:dashboard'
 
 # Onde o usuário será redirecionado após sair
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+urlpatterns = [
+    path('accounts/register/', register, name='register'),
+]

@@ -18,6 +18,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from . import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +27,7 @@ urlpatterns = [
     path('customers/', include('customers.urls')),
     path('budgets/', include('budgets.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('cadastrar/', views.cadastrar, name='cadastrar'),
     
     # Redireciona a raiz '/' diretamente para o dashboard se desejar
     path('', lambda request: redirect('dashboard'), name='home'),

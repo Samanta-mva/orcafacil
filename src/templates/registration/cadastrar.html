@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {# Ou o nome do seu template base, se usar #}
+
+{% block content %}
+<div style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+    <h2>Criar uma Conta</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: red;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        {# Renderiza os campos de usuário, senha e confirmação #}
+        {{ form.as_p }}
+
+        <button type="submit" style="width: 100%; padding: 10px; margin-top: 10px;">Cadastrar</button>
+    </form>
+
+    <p style="margin-top: 15px;">
+        Já tem uma conta? <a href="{% url 'login' %}">Faça login</a>
+    </p>
+</div>
+{% endblock %}
