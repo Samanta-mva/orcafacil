@@ -39,11 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Apps do Projeto OrçaFácil
-    'core',
-    'accounts',
-    'customers',
-    'materials',
-    'budgets',
+    'src.core',
+    'src.accounts',
+    'src.customers',
+    'src.materials',
+    'src.budgets',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'src.config.urls'
 
 TEMPLATES = [
     {
