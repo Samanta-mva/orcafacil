@@ -153,7 +153,3 @@ LOGIN_REDIRECT_URL = '/'  # Ou a rota inicial do seu app, ex: 'core:dashboard'
 
 # Onde o usuário será redirecionado após sair
 LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-urlpatterns = [
-    path('accounts/register/', register, name='register'),
-]
