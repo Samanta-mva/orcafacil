@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+
 
 class Customer(models.Model):
     name = models.CharField("Nome Completo", max_length=150)

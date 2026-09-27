@@ -1,6 +1,8 @@
 from django.db import models
 from decimal import Decimal
 from customers.models import Customer
+from django.conf import settings
+
 
 class Orcamento(models.Model):
     STATUS_CHOICES = [
