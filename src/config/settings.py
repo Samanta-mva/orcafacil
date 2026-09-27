@@ -39,11 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Apps do Projeto OrçaFácil
-    'src.core.apps.CoreConfig',
-    'src.accounts.apps.AccountsConfig',
-    'src.customers.apps.CustomersConfig',
-    'src.materials.apps.MaterialsConfig',
-    'src.budgets.apps.BudgetsConfig',
+    'core.apps.CoreConfig',
+    'accounts.apps.AccountsConfig',
+    'customers.apps.CustomersConfig',
+    'materials.apps.MaterialsConfig',
+    'budgets.apps.BudgetsConfig',
 ]
 
 MIDDLEWARE = [

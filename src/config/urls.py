@@ -21,9 +21,9 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('src.core.urls')),  # Inclui as rotas do core (dashboard)
-    path('customers/', include('src.customers.urls')),
-    path('budgets/', include('src.budgets.urls')),
+    path('', include('core.urls')),  # Inclui as rotas do core (dashboard)
+    path('customers/', include('customers.urls')),
+    path('budgets/', include('budgets.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     
     # Redireciona a raiz '/' diretamente para o dashboard se desejar

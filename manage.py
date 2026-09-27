@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
 import os
 import sys
+from pathlib import Path
 
 def main():
-    """Run administrative tasks."""
-    # Adicione estas duas linhas para o Django encontrar a pasta src
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    sys.path.append(os.path.join(BASE_DIR, 'src'))
+    # Define BASE_DIR apontando para a raiz do projeto (/app)
+    BASE_DIR = Path(__file__).resolve().parent
+    
+    # Adiciona a pasta 'src' no topo do caminho do Python (PYTHONPATH)
+    sys.path.insert(0, str(BASE_DIR / 'src'))
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     try:
