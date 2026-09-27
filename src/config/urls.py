@@ -17,21 +17,22 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import redirect
 from accounts.views import register
 
-
 urlpatterns = [
+    # Painel Administrativo
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),  # Inclui as rotas do core (dashboard)
+    
+    # Cadastro de Usuários (Sua view customizada)
+    path('accounts/register/', register, name='register'),
+    
+    # Login/Logout nativos do Django (/accounts/login/, /accounts/logout/, etc.)
+    path('accounts/', include('django.contrib.auth.urls')),
+    
+    # Módulos do Sistema
     path('customers/', include('customers.urls')),
     path('budgets/', include('budgets.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('cadastrar/', views.cadastrar, name='cadastrar'),
-    path('accounts/register/', register, name='register'),
-    path('accounts/', include('django.contrib.auth.urls')),  # Login/Logout nativos
-    path('', include('core.urls')),                          # Home / Dashboard
     
-    # Redireciona a raiz '/' diretamente para o dashboard se desejar
-    path('', lambda request: redirect('dashboard'), name='home'),
+    # Rota Principal / Home / Dashboard
+    path('', include('core.urls')),
 ]
