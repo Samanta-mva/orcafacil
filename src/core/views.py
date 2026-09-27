@@ -9,7 +9,8 @@ from django.contrib import messages
 
 @login_required
 def dashboard_view(request):
-    user_budgets = Budget.objects.filter(user=request.user)
+    # Busca os orçamentos através do relacionamento do cliente com o usuário logado
+    user_budgets = Budget.objects.filter(customer__user=request.user)
     
     # Contadores
     total_budgets = user_budgets.count()
@@ -37,7 +38,7 @@ def dashboard_view(request):
     }
     return render(request, 'core/dashboard.html', context)
 
-
+    
 def cadastrar(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -50,4 +51,3 @@ def cadastrar(request):
         form = UserCreationForm()
     
     return render(request, 'cadastrar.html', {'form': form})
-    
