@@ -13,7 +13,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
                 <i class="bi bi-tools text-warning me-2"></i>OrçaFácil
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -40,8 +40,9 @@
                     </form>
                 </div>
                 {% else %}
-                <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="{% url 'login' %}">Entrar</a>
+                <div class="navbar-nav ms-auto align-items-center">
+                    <a class="nav-link me-2" href="{% url 'login' %}">Entrar</a>
+                    <a class="btn btn-warning btn-sm fw-semibold" href="{% url 'register' %}">Criar conta</a>
                 </div>
                 {% endif %}
             </div>
