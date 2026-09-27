@@ -2,31 +2,32 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from budgets.models import Budget
 from customers.models import Customer
-from django.db.models import Sum, Count
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 
 @login_required
 def dashboard_view(request):
-    # Busca todos os orçamentos e clientes do banco de dados
-    user_budgets = Budget.objects.all()
-    user_customers = Customer.objects.all()
+    # Filtra apenas os orçamentos e clientes vinculados ao usuário logado
+    user_budgets = Budget.objects.filter(user=request.user)
+    user_customers = Customer.objects.filter(user=request.user)
     
-    # Contadores
+    # Contagem geral
     total_budgets = user_budgets.count()
-    draft_count = user_budgets.filter(status='draft').count()
-    sent_count = user_budgets.filter(status='sent').count()
-    approved_count = user_budgets.filter(status='approved').count()
-    
-    # Soma total aprovada
-    total_revenue = user_budgets.filter(status='approved').aggregate(Sum('total_price'))['total_price__sum'] or 0
-    
-    # Total de clientes
     total_customers = user_customers.count()
     
-    # Últimos 5 orçamentos
-    recent_budgets = user_budgets.order_by('-created_at')[:5]
+    # Filtros por status do projeto
+    draft_count = user_budgets.filter(status='RASCUNHO').count()
+    sent_count = user_budgets.filter(status='ENVIADO').count()
+    
+    approved_budgets = user_budgets.filter(status='APROVADO')
+    approved_count = approved_budgets.count()
+    
+    # Soma do faturamento dos orçamentos aprovados usando a property valor_final
+    total_revenue = sum(b.valor_final for b in approved_budgets)
+    
+    # Últimos 5 orçamentos do usuário ordenados por data de criação
+    recent_budgets = user_budgets.order_by('-criado_em')[:5]
 
     context = {
         'total_budgets': total_budgets,
@@ -47,7 +48,7 @@ def cadastrar(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Conta criada com sucesso para {username}! Faça login.')
-            return redirect('login')  # Redireciona para a tela de login
+            return redirect('login')
     else:
         form = UserCreationForm()
     

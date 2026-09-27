@@ -1,10 +1,10 @@
 from django.db import models
 from decimal import Decimal
-from customers.models import Customer
 from django.conf import settings
+from customers.models import Customer
 
 
-class Orcamento(models.Model):
+class Budget(models.Model):
     STATUS_CHOICES = [
         ('RASCUNHO', 'Rascunho'),
         ('ENVIADO', 'Enviado'),
@@ -12,13 +12,36 @@ class Orcamento(models.Model):
         ('RECUSADO', 'Recusado'),
     ]
 
-    titulo = models.CharField(max_length=150, verbose_name="Título do Projeto")
-    descricao = models.TextField(blank=True, null=True, verbose_name="Descrição/Observações")
+    # Relacionamentos
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='budgets',
+        verbose_name="Marceneiro/Usuário"
+    )
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='budgets',
+        verbose_name="Cliente"
+    )
+
+    # Campos de Negócio
+    titulo = models.CharField("Título do Projeto", max_length=150)
+    descricao = models.TextField("Descrição/Observações", blank=True, null=True)
     valor_mao_obra = models.DecimalField(
-        max_length=10, max_digits=10, decimal_places=2, default=Decimal('0.00'), verbose_name="Mão de Obra (R$)"
+        "Mão de Obra (R$)",
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00')
     )
     margem_lucro_percentual = models.DecimalField(
-        max_digits=5, decimal_places=2, default=Decimal('0.00'), verbose_name="Margem de Lucro (%)"
+        "Margem de Lucro (%)",
+        max_digits=5,
+        decimal_places=2,
+        default=Decimal('0.00')
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='RASCUNHO')
     criado_em = models.DateTimeField(auto_now_add=True)
@@ -35,8 +58,10 @@ class Orcamento(models.Model):
     @property
     def total_materiais(self) -> Decimal:
         """Soma o subtotal de todos os materiais vinculados."""
-        total = sum(item.subtotal for item in self.materiais.all())
-        return Decimal(str(total)).quantize(Decimal('0.01'))
+        if hasattr(self, 'materiais'):
+            total = sum(item.subtotal for item in self.materiais.all())
+            return Decimal(str(total)).quantize(Decimal('0.01'))
+        return Decimal('0.00')
 
     @property
     def custo_total_base(self) -> Decimal:
@@ -53,22 +78,3 @@ class Orcamento(models.Model):
     def valor_final(self) -> Decimal:
         """Retorna o valor total de venda do orçamento."""
         return self.custo_total_base + self.valor_lucro
-
-
-class Budget(models.Model):
-    customer = models.ForeignKey(
-        Customer,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='budgets',
-        verbose_name="Cliente"
-    )
-    
-
-user = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name='%(class)ss',  # Gera 'customers' e 'budgets'
-    verbose_name="Marceneiro/Usuário"
-)

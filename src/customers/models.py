@@ -3,6 +3,13 @@ from django.conf import settings
 
 
 class Customer(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='%(class)ss',  # Gera 'customers' e 'budgets'
+        verbose_name="Marceneiro/Usuário"
+    )
+
     name = models.CharField("Nome Completo", max_length=150)
     email = models.EmailField("E-mail", blank=True, null=True)
     phone = models.CharField("Telefone/WhatsApp", max_length=20)
@@ -19,9 +26,4 @@ class Customer(models.Model):
         return f"{self.name} ({self.phone})"
 
 
-user = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name='%(class)ss',  # Gera 'customers' e 'budgets'
-    verbose_name="Marceneiro/Usuário"
-)
+   
